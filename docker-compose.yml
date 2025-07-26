@@ -6,10 +6,10 @@ services:
     container_name: my-mysql-db # Nombre opcional para el contenedor
     restart: always # Asegura que el contenedor se reinicie si falla o si Docker se reinicia
     environment: # Variables de entorno para la configuración de MySQL
-      MYSQL_ROOT_PASSWORD: ${db.password.root} # ¡CAMBIA ESTO!
-      MYSQL_DATABASE: ${db.name} # Nombre de la base de datos a crear
-      MYSQL_USER: ${db.username} # Usuario de la base de datos
-      MYSQL_PASSWORD: ${db.password} # Contraseña del usuario ¡CAMBIA ESTO!
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD_ROOT}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306" # Mapea el puerto 3306 del host al 3306 del contenedor
     volumes:
