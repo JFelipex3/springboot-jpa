@@ -2,6 +2,7 @@ package com.jmachuca.curso.springboot.jpa.springboot_jpa;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.repositories.PersonRepository;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootApplication
 public class SpringbootJpaApplication implements CommandLineRunner{
@@ -23,8 +26,50 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		findOne();
+		update();
 		
+	}
+
+	@Transactional
+	public void create() {
+
+		Scanner scanner = new Scanner(System.in);
+		String name = scanner.next();
+
+		System.out.print("Ingrese el apellido: ");
+		String lastName = scanner.next();
+
+		System.out.print("Ingrese Lenguaje de Programación: ");
+		String programmingLanguage = scanner.next();
+
+		Person person = new Person(null, name, lastName, programmingLanguage);
+
+		Person personNew = personRepository.save(person);
+		System.out.println(personNew);
+
+		scanner.close();
+	}
+
+	@Transactional
+	public void update() {
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Ingrese el id de la persona: ");
+		Long id = scanner.nextLong();
+		
+		Optional<Person> optionalPerson = personRepository.findById(id);
+
+		optionalPerson.ifPresent(person -> {
+			System.out.println(person);
+			System.out.print("Ingrese el lenguaje de programación: ");
+			String programmingLanguage = scanner.next();
+			person.setProgrammingLanguage(programmingLanguage);
+			Person personDb = personRepository.save(person);
+			System.out.println(personDb);
+		});
+
+		scanner.close();
+
 	}
 
 	public void findOne() {
