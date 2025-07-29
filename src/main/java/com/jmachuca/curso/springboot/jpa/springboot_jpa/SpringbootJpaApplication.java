@@ -1,6 +1,7 @@
 package com.jmachuca.curso.springboot.jpa.springboot_jpa;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +23,29 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
+		findOne();
+		
+	}
+
+	public void findOne() {
+		/*
+		Person person = null;
+		Optional<Person> optionalPerson = personRepository.findById(1L);
+
+		if (optionalPerson.isPresent()) {
+			person = optionalPerson.get();
+		}
+
+		System.out.println(person);
+		*/
+
+		//personRepository.findById(1L).ifPresent(person -> System.out.println(person));
+
+		personRepository.findById(1L).ifPresent(System.out::println); // Lo mismo que el anterior pero usando metodo de referencia
+	}
+
+	public void list() {
+
 		List<Person> persons = (List<Person>) personRepository.findAll();
 		System.out.println("Listado de Personas");
 		persons.stream().forEach(person -> {
