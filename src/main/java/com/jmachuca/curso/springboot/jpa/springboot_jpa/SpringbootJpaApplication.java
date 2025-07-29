@@ -22,10 +22,40 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		
-		//List<Person> persons = (List<Person>) personRepository.findAll();
-		List<Person> persons = (List<Person>) personRepository.buscarPorProgrammingLanguage("Java");
+		List<Person> persons = (List<Person>) personRepository.findAll();
+		System.out.println("Listado de Personas");
+		persons.stream().forEach(person -> {
+			System.out.println(person);
+		});
+		System.out.println("*****************************************");
 
-		persons.stream().forEach(person -> System.out.println(person));
+		List<Person> persons2 = (List<Person>) personRepository.buscarPorProgrammingLanguage("Java");
+		System.out.println("Listado de Personas por Lenguaje de Programacion Java");
+		persons2.stream().forEach(person -> {
+			System.out.println(person);
+		});
+		System.out.println("*****************************************");
+
+		List<Person> persons3 = (List<Person>) personRepository.findByProgrammingLanguageAndName("Java", "Andres");
+		System.out.println("Listado de Personas por Lenguaje de Programacion Java y nombre especifico");
+		persons3.stream().forEach(person -> {
+			System.out.println(person);
+		});
+		System.out.println("*****************************************");
+
+		List<Object[]> personsValues = personRepository.obtenerPersonData();
+		System.out.println("Listado de Personas con Nombre y lenguaje de programacion");
+		personsValues.stream().forEach(person -> {
+			System.out.println(person[0] + " es experto en " + person[1]);
+		});
+		System.out.println("*****************************************");
+
+		List<Object[]> personsValues2 = personRepository.obtenerPersonData("John");
+		System.out.println("Listado de Personas con Nombre y lenguaje de programacion");
+		personsValues2.stream().forEach(person -> {
+			System.out.println(person[0] + " es experto en " + person[1]);
+		});
+		System.out.println("*****************************************");
 	}
 
 }
