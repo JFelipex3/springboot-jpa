@@ -133,7 +133,8 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		Optional<Person> personOptional = personRepository.findById(id);
 		personOptional.ifPresentOrElse(person -> {
 			personRepository.deleteById(id);
-			System.out.println("Persona con id " + id + " eliminada.");
+			System.out.println(person.getName() + " " + person.getLastname() + " con id " + id + " eliminada.");
+			System.out.println("");
 			System.out.println("Lista de personas actualizada:");
 			list();
 		}, () -> {
