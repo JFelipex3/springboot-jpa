@@ -56,6 +56,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 					findOne(scanner);
 					break;
 				case 6:
+					findCoincidence(scanner);
+					break;
+				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
 				default:
@@ -63,11 +66,11 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 					break;
 			}
 
-			if (option != 6) {
+			if (option != 0) {
 				System.out.println("\nPresione Enter para continuar...");
 				scanner.nextLine();
 			}
-		} while (option != 6);
+		} while (option != 0);
 
 		scanner.close();
 	}
@@ -83,7 +86,8 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("3. Eliminar Persona");
 		System.out.println("4. Listar Personas");
 		System.out.println("5. Buscar Persona por ID");
-		System.out.println("6. Salir");
+		System.out.println("6. Buscar Persona por Coincidencia");
+		System.out.println("0. Salir");
 		System.out.println("");
 	}
 
@@ -152,6 +156,21 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				person -> System.out.println("Persona encontrada: " + person), 
 				() -> System.out.println("Persona con id " + id + " no encontrada.")
 			);
+	}
+
+	public void findCoincidence(Scanner scanner) {
+
+		System.out.print("Ingrese texto a buscar: ");
+		String text = scanner.nextLine();
+
+		List<Person> personsList = personRepository.findLikeName(text);
+
+		if (personsList.isEmpty()) {
+			System.out.println("No se encontraron personas que contengan el texto ingresado en el nombre.");
+		} else {
+			System.out.println("Personas encontradas:");
+			personsList.forEach(System.out::println);
+		}
 	}
 
 	public void list() {
