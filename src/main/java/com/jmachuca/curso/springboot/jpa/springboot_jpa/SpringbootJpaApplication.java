@@ -25,110 +25,140 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		
-		update();
-		
+		Scanner scanner = new Scanner(System.in);
+		int option;
+
+		do {
+			menu();
+			System.out.print("Ingresa Opción deseada: ");
+			while (!scanner.hasNextInt()) {
+				System.out.println("Entrada inválida. Por favor, ingrese un número.");
+				scanner.next(); // descartar entrada incorrecta
+				System.out.print("Ingresa Opción deseada: ");
+			}
+			option = scanner.nextInt();
+			scanner.nextLine(); // consumir el salto de línea
+
+			switch (option) {
+				case 1:
+					create(scanner);
+					break;
+				case 2:
+					update(scanner);
+					break;
+				case 3:
+					delete(scanner);
+					break;
+				case 4:
+					list();
+					break;
+				case 5:
+					findOne(scanner);
+					break;
+				case 6:
+					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
+					break;
+				default:
+					System.out.println("Opción no válida. Intente de nuevo.");
+					break;
+			}
+
+			if (option != 6) {
+				System.out.println("\nPresione Enter para continuar...");
+				scanner.nextLine();
+			}
+		} while (option != 6);
+
+		scanner.close();
+	}
+
+	public void menu() {
+		System.out.println("");
+		System.out.println("*****************************************");
+		System.out.println("Opciones Programa");
+		System.out.println("-----------------");
+		System.out.println("");
+		System.out.println("1. Crear Persona");
+		System.out.println("2. Actualizar Persona");
+		System.out.println("3. Eliminar Persona");
+		System.out.println("4. Listar Personas");
+		System.out.println("5. Buscar Persona por ID");
+		System.out.println("6. Salir");
+		System.out.println("");
 	}
 
 	@Transactional
-	public void create() {
-
-		Scanner scanner = new Scanner(System.in);
-		String name = scanner.next();
+	public void create(Scanner scanner) {
+		System.out.print("Ingrese el nombre: ");
+		String name = scanner.nextLine();
 
 		System.out.print("Ingrese el apellido: ");
-		String lastName = scanner.next();
+		String lastName = scanner.nextLine();
 
 		System.out.print("Ingrese Lenguaje de Programación: ");
-		String programmingLanguage = scanner.next();
+		String programmingLanguage = scanner.nextLine();
 
 		Person person = new Person(null, name, lastName, programmingLanguage);
 
 		Person personNew = personRepository.save(person);
-		System.out.println(personNew);
-
-		scanner.close();
+		System.out.println("Persona creada: " + personNew);
 	}
 
 	@Transactional
-	public void update() {
-
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Ingrese el id de la persona: ");
+	public void update(Scanner scanner) {
+		list();
+		System.out.print("Ingrese el id de la persona a actualizar: ");
 		Long id = scanner.nextLong();
+		scanner.nextLine(); // consume newline
 		
 		Optional<Person> optionalPerson = personRepository.findById(id);
 
-		optionalPerson.ifPresent(person -> {
-			System.out.println(person);
-			System.out.print("Ingrese el lenguaje de programación: ");
-			String programmingLanguage = scanner.next();
+		optionalPerson.ifPresentOrElse(person -> {
+			System.out.println("Persona encontrada: " + person);
+			System.out.print("Ingrese el nuevo lenguaje de programación: ");
+			String programmingLanguage = scanner.nextLine();
 			person.setProgrammingLanguage(programmingLanguage);
 			Person personDb = personRepository.save(person);
-			System.out.println(personDb);
-		});
-
-		scanner.close();
-
+			System.out.println("Persona actualizada: " + personDb);
+		}, () -> System.out.println("Persona con id " + id + " no encontrada."));
 	}
 
-	public void findOne() {
-		/*
-		Person person = null;
-		Optional<Person> optionalPerson = personRepository.findById(1L);
+	@Transactional
+	public void delete(Scanner scanner) {
+		list();
+		System.out.print("Ingrese el id de la persona a eliminar: ");
+		long id = scanner.nextLong();
+		scanner.nextLine(); // consume newline
 
-		if (optionalPerson.isPresent()) {
-			person = optionalPerson.get();
-		}
+		Optional<Person> personOptional = personRepository.findById(id);
+		personOptional.ifPresentOrElse(person -> {
+			personRepository.deleteById(id);
+			System.out.println("Persona con id " + id + " eliminada.");
+			System.out.println("Lista de personas actualizada:");
+			list();
+		}, () -> {
+			System.out.println("Persona con id " + id + " no encontrada.");
+		});
+	}
 
-		System.out.println(person);
-		*/
-
-		//personRepository.findById(1L).ifPresent(person -> System.out.println(person));
-
-		//personRepository.findById(1L).ifPresent(System.out::println); // Lo mismo que el anterior pero usando metodo de referencia
-
-		personRepository.findOne(1L).ifPresent(System.out::println);
-		personRepository.findOneLikeName("ria").ifPresent(System.out::println);
-		personRepository.findByNameContaining("an").ifPresent(System.out::println);
+	public void findOne(Scanner scanner) {
+		System.out.print("Ingrese el id de la persona a buscar: ");
+		long id = scanner.nextLong();
+		scanner.nextLine(); // consume newline
+		
+		personRepository.findById(id)
+			.ifPresentOrElse(
+				person -> System.out.println("Persona encontrada: " + person), 
+				() -> System.out.println("Persona con id " + id + " no encontrada.")
+			);
 	}
 
 	public void list() {
-
 		List<Person> persons = (List<Person>) personRepository.findAll();
 		System.out.println("Listado de Personas");
 		persons.stream().forEach(person -> {
 			System.out.println(person);
 		});
-		System.out.println("*****************************************");
-
-		List<Person> persons2 = (List<Person>) personRepository.buscarPorProgrammingLanguage("Java");
-		System.out.println("Listado de Personas por Lenguaje de Programacion Java");
-		persons2.stream().forEach(person -> {
-			System.out.println(person);
-		});
-		System.out.println("*****************************************");
-
-		List<Person> persons3 = (List<Person>) personRepository.findByProgrammingLanguageAndName("Java", "Andres");
-		System.out.println("Listado de Personas por Lenguaje de Programacion Java y nombre especifico");
-		persons3.stream().forEach(person -> {
-			System.out.println(person);
-		});
-		System.out.println("*****************************************");
-
-		List<Object[]> personsValues = personRepository.obtenerPersonData();
-		System.out.println("Listado de Personas con Nombre y lenguaje de programacion");
-		personsValues.stream().forEach(person -> {
-			System.out.println(person[0] + " es experto en " + person[1]);
-		});
-		System.out.println("*****************************************");
-
-		List<Object[]> personsValues2 = personRepository.obtenerPersonData("John");
-		System.out.println("Listado de Personas con Nombre y lenguaje de programacion");
-		personsValues2.stream().forEach(person -> {
-			System.out.println(person[0] + " es experto en " + person[1]);
-		});
-		System.out.println("*****************************************");
 	}
 
 }
