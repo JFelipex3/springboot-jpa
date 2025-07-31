@@ -62,6 +62,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 					//personalizedQueries(scanner);
 					personalizedQueries2();
 					break;
+				case 8:
+					personalizedQueriesDistinct();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -92,8 +95,41 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("5. Buscar Persona por ID");
 		System.out.println("6. Buscar Persona por Coincidencia");
 		System.out.println("7. Consultas Personalizadas");
+		System.out.println("8. Consultas Personalizadas JPQL - HQL Funciones");
 		System.out.println("0. Salir");
 		System.out.println("");
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesDistinct() {
+		System.out.println("Consultas con nombres de personas");
+		List<String> names = personRepository.findAllNames();
+
+		names.stream().forEach(name -> {
+			System.out.println("Nombre: " + name);
+		});
+
+		System.out.println("");
+		System.out.println("Consultas con nombres de personas distinct");
+		List<String> namesDistinct = personRepository.findAllNamesDistinct();
+
+		namesDistinct.stream().forEach(name -> {
+			System.out.println("Nombre: " + name);
+		});
+
+		System.out.println("");
+		System.out.println("Consultas con lenguajes de programación distinct");
+		List<String> languaguesDistinct = personRepository.findAllProgrammingLanguageDistinct();
+
+		languaguesDistinct.stream().forEach(language -> {
+			System.out.println("Lenguaje: " + language);
+		});
+
+		System.out.println("");
+		System.out.println("Consultas cuenta lenguajes de programación distinct");
+		Long countLangDistinct = personRepository.countProgrammingLanguageDistinct();
+
+		System.out.println("Cantidad de lenguajes de programación distintos: " + countLangDistinct);
 	}
 
 	@Transactional

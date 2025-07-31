@@ -10,6 +10,18 @@ import com.jmachuca.curso.springboot.jpa.springboot_jpa.dto.PersonDto;
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
+
+    @Query("SELECT p.name FROM Person p")
+    List<String> findAllNames();
+
+    @Query("SELECT DISTINCT(p.name) FROM Person p")
+    List<String> findAllNamesDistinct();
+
+    @Query("SELECT DISTINCT(p.programmingLanguage) FROM Person p")
+    List<String> findAllProgrammingLanguageDistinct();
+
+    @Query("SELECT COUNT(DISTINCT(p.programmingLanguage)) FROM Person p")
+    Long countProgrammingLanguageDistinct();
     
     @Query("SELECT new com.jmachuca.curso.springboot.jpa.springboot_jpa.dto.PersonDto(p.name, p.lastname) FROM Person p")
     List<PersonDto> findAllPersonDto();
