@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.repositories.PersonRepository;
-
-import jakarta.transaction.Transactional;
 
 @SpringBootApplication
 public class SpringbootJpaApplication implements CommandLineRunner{
@@ -58,6 +57,10 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				case 6:
 					findCoincidence(scanner);
 					break;
+				case 7:
+					//personalizedQueries(scanner);
+					personalizedQueries2();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -87,6 +90,7 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("4. Listar Personas");
 		System.out.println("5. Buscar Persona por ID");
 		System.out.println("6. Buscar Persona por Coincidencia");
+		System.out.println("7. Consultas Personalizadas");
 		System.out.println("0. Salir");
 		System.out.println("");
 	}
@@ -146,6 +150,47 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		});
 	}
 
+	@Transactional(readOnly = true)
+	public void personalizedQueries(Scanner scanner) {
+
+		System.out.println("===================== Consultas personalizadas por el ID =====================");
+		System.out.print("Ingrese el id de la persona a buscar: ");
+		Long id = scanner.nextLong();
+		scanner.nextLine();
+
+		String namePerson = personRepository.getNameById(id);
+		Long idPerson = personRepository.getIdById(id);
+		String fullName = personRepository.getFullNameById(id);
+		Object[] personDataFull = (Object[]) personRepository.obtenerPersonDataFull(id);
+		
+		if (namePerson.isEmpty()){
+			System.out.println("Persona con id " + id + " no encontrada.");
+		} else {
+			System.out.println("Nombre de la persona con id " + id + ": " + namePerson);
+			System.out.println("Id de la persona con id " + id + ": " + idPerson);
+			System.out.println("Nombre completo de la persona con id " + id + ": " + fullName);
+			System.out.println("ID: " + personDataFull[0] + ", Nombre: " + personDataFull[1] + ", Apellido: " + personDataFull[2] + ", Lenguaje de Programación: " + personDataFull[3]);
+		}
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueries2() {
+		System.out.println("===================== Consulta por Objeto persona y lenguaje de programación ====================");
+		List<Object[]> personsRegs = personRepository.findAllMixPerson();
+
+		personsRegs.forEach(reg -> {
+			System.out.println("ProgrammingLanguague: " + reg[1] + ", person: " + reg[0]);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta que puebla y devuelve objeto entity de una instancia personalizada ====================");
+		List<Person> persons = personRepository.findAllObjectPersonPersonalized();
+
+		persons.forEach(person -> {
+			System.out.println("Person: " + person);
+		});
+	}
+
 	public void findOne(Scanner scanner) {
 		System.out.print("Ingrese el id de la persona a buscar: ");
 		long id = scanner.nextLong();
@@ -156,6 +201,7 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				person -> System.out.println("Persona encontrada: " + person), 
 				() -> System.out.println("Persona con id " + id + " no encontrada.")
 			);
+		
 	}
 
 	public void findCoincidence(Scanner scanner) {
