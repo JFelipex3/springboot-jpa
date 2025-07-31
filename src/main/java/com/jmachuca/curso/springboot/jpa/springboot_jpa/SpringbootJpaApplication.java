@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jmachuca.curso.springboot.jpa.springboot_jpa.dto.PersonDto;
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 import com.jmachuca.curso.springboot.jpa.springboot_jpa.repositories.PersonRepository;
 
@@ -188,6 +189,14 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 
 		persons.forEach(person -> {
 			System.out.println("Person: " + person);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta que puebla y devuelve objeto dto de una clase personalizada ====================");
+
+		List<PersonDto> personsDtos = personRepository.findAllPersonDto();
+		personsDtos.forEach(personDto -> {
+			System.out.println("PersonDto: " + personDto.getName() + " " + personDto.getLastname());
 		});
 	}
 
