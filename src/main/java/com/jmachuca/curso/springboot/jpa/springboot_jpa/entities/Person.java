@@ -1,14 +1,11 @@
 package com.jmachuca.curso.springboot.jpa.springboot_jpa.entities;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,14 +22,12 @@ public class Person {
     @Column(name = "programming_language") // Se puede omitir si el nombre de la columna se llama igual que el atributo
     private String programmingLanguage;
 
-    @Column(name = "created_at")
-    private LocalDateTime creatAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Embedded
+    private Audit audit = new Audit();
 
     // Si se define un constructor con parametros es obligatorio crear un constructor sin parametros para Hibernate
     public Person() {
+        this.audit = new Audit();
     }
 
     public Person(Long id, String name, String lastname, String programmingLanguage) {
@@ -40,23 +35,13 @@ public class Person {
         this.name = name;
         this.lastname = lastname;
         this.programmingLanguage = programmingLanguage;
+        this.audit = new Audit();
     }
 
     public Person(String name, String lastname) {
         this.name = name;
         this.lastname = lastname;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        System.out.println("Evento del ciclo de vida del entity prePersist");
-        this.creatAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        System.out.println("Evento del ciclo de vida del entity preUpdate");
-        this.updatedAt = LocalDateTime.now();
+        this.audit = new Audit();
     }
 
     public Long getId() {
@@ -94,7 +79,9 @@ public class Person {
     @Override
     public String toString() {
         return "Person [id=" + id + ", name=" + name + ", lastname=" + lastname + ", programmingLanguage="
-                + programmingLanguage + ", creatAt=" + creatAt + ", updatedAt=" + updatedAt + "]";
+                + programmingLanguage + ", creatAt=" + (audit != null ? audit.getCreatAt() : null)
+                + ", updatedAt=" + (audit != null ? audit.getUpdatedAt() : null) + "]";
     }
+
 
 }
