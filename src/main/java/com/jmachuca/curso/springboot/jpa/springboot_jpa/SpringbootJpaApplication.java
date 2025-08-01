@@ -77,6 +77,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				case 12:
 					personalizedQueriesSubquery();
 					break;
+				case 13:
+					personalizedQueriesWhereIN();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -112,8 +115,19 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("10. Consultas Personalizadas Between And Order By");
 		System.out.println("11. Consultas Personalizadas Count - Max - Min - Length -  Sum - Avg");
 		System.out.println("12. Consultas con Subquery o Subconsulta en JPQL");
+		System.out.println("13. Consulta por Where IN");
 		System.out.println("0. Salir");
 		System.out.println("");
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesWhereIN() {
+		System.out.println("===================== Consulta por Where IN (1, 2, 5) =====================");
+		List<Long> ids = List.of(1L, 2L, 5L);
+		List<Person> persons = personRepository.getPersonsByIds(ids);
+		persons.stream().forEach(person -> {
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
+		});	
 	}
 
 	@Transactional(readOnly = true)
