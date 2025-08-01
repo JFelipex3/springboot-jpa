@@ -69,7 +69,7 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 					personalizedQueriesConcatUpperAndLowerCase();
 					break;
 				case 10:
-					personalizedQueriesBetween();
+					personalizedQueriesBetweenAndOrderBy();
 					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
@@ -103,37 +103,37 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("7. Consultas Personalizadas");
 		System.out.println("8. Consultas Personalizadas Distinct");
 		System.out.println("9. Consultas Personalizadas Concat Upper and LowerCase");
-		System.out.println("10. Consultas Personalizadas Between");
+		System.out.println("10. Consultas Personalizadas Between And Order By");
 		System.out.println("0. Salir");
 		System.out.println("");
 	}
 
 	@Transactional(readOnly = true)
-	public void personalizedQueriesBetween() {
-		System.out.println("===================== Consulta personas between ID 2 y 5 =====================");
+	public void personalizedQueriesBetweenAndOrderBy() {
+		System.out.println("===================== Consulta personas between ID 2 y 5 + Order By Name =====================");
 		List<Person> persons = personRepository.findAllBetweenId(2, 5);
 		persons.stream().forEach(person -> {
 			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
 		});
 
 		System.out.println("");
-		System.out.println("===================== Consulta personas between name J y P =====================");
+		System.out.println("===================== Consulta personas between name J y P + Order By Name =====================");
 		List<Person> personsName = personRepository.findAllBetweenName("J", "P");
 		personsName.stream().forEach(person -> {
-			System.out.println("Persona: " + person.getName() + " " + person.getLastname());
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
 		});
 
-		System.out.println("===================== Consulta personas between ID 5 y 8 (Query Method) =====================");
-		List<Person> personsMethod = personRepository.findAllBetweenId(5, 8);
+		System.out.println("===================== Consulta personas between ID 5 y 8 + Order By Name (Query Method) =====================");
+		List<Person> personsMethod = personRepository.findAllBetweenId(1, 4);
 		personsMethod.stream().forEach(person -> {
 			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
 		});
 
 		System.out.println("");
-		System.out.println("===================== Consulta personas between name A y C (Query Method) =====================");
-		List<Person> personsNameMethod = personRepository.findAllBetweenName("A", "C");
+		System.out.println("===================== Consulta personas between name A y N + Order By Name (Query Method) =====================");
+		List<Person> personsNameMethod = personRepository.findAllBetweenName("A", "N");
 		personsNameMethod.stream().forEach(person -> {
-			System.out.println("Persona: " + person.getName() + " " + person.getLastname());
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
 		});
 	}
 

@@ -11,14 +11,14 @@ import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
-    List<Person> findByIdBetween(int id1, int id2);
+    List<Person> findByIdBetweenOrderByName(int id1, int id2);
 
-    List<Person> findByNameBetween(String c1, String c2);
+    List<Person> findByNameBetweenOrderByName(String c1, String c2);
 
-    @Query("SELECT p FROM Person p WHERE p.name BETWEEN ?1 AND ?2")
+    @Query("SELECT p FROM Person p WHERE p.name BETWEEN ?1 AND ?2 ORDER BY p.name")
     List<Person> findAllBetweenName(String c1, String c2);
 
-    @Query("SELECT p FROM Person p WHERE p.id BETWEEN ?1 AND ?2")
+    @Query("SELECT p FROM Person p WHERE p.id BETWEEN ?1 AND ?2 ORDER BY p.name")
     List<Person> findAllBetweenId(int id1, int id2);
 
     @Query("SELECT UPPER(CONCAT(p.name, ' ', p.lastname)) as fullName FROM Person p")
