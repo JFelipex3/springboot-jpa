@@ -11,6 +11,10 @@ import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
+    List<Person> findByIdBetween(int id1, int id2);
+
+    List<Person> findByNameBetween(String c1, String c2);
+
     @Query("SELECT p FROM Person p WHERE p.name BETWEEN ?1 AND ?2")
     List<Person> findAllBetweenName(String c1, String c2);
 

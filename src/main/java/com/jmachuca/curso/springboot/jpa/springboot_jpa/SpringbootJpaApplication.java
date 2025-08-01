@@ -122,6 +122,19 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		personsName.stream().forEach(person -> {
 			System.out.println("Persona: " + person.getName() + " " + person.getLastname());
 		});
+
+		System.out.println("===================== Consulta personas between ID 5 y 8 (Query Method) =====================");
+		List<Person> personsMethod = personRepository.findAllBetweenId(5, 8);
+		personsMethod.stream().forEach(person -> {
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta personas between name A y C (Query Method) =====================");
+		List<Person> personsNameMethod = personRepository.findAllBetweenName("A", "C");
+		personsNameMethod.stream().forEach(person -> {
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname());
+		});
 	}
 
 	@Transactional(readOnly = true)
