@@ -74,6 +74,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				case 11:
 					personalizedQueriesCountMaxMinLengthSumAvg();
 					break;
+				case 12:
+					personalizedQueriesSubquery();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -108,8 +111,34 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("9. Consultas Personalizadas Concat Upper and LowerCase");
 		System.out.println("10. Consultas Personalizadas Between And Order By");
 		System.out.println("11. Consultas Personalizadas Count - Max - Min - Length -  Sum - Avg");
+		System.out.println("12. Consultas con Subquery o Subconsulta en JPQL");
 		System.out.println("0. Salir");
 		System.out.println("");
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesSubquery() {
+		System.out.println("===================== Consulta con Subquery: Nombres más cortos =====================");
+		List<Object[]> shortersNames = personRepository.getShorterName();
+		shortersNames.stream().forEach(person -> {
+			System.out.println("Nombre: " + person[0] + ", Longitud: " + person[1]);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta con Subquery: Nombres más largos =====================");
+		List<Object[]> largesNames = personRepository.getLargeName();
+		largesNames.stream().forEach(person -> {
+			System.out.println("Nombre: " + person[0] + ", Longitud: " + person[1]);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta con Subquery: Persona con ID mayor =====================");
+		Optional<Person> lastRegistration = personRepository.getLastRegistration();
+		lastRegistration.ifPresentOrElse(person -> {
+			System.out.println("Último registro: " + person);
+		}, () -> {
+			System.out.println("No se encontró ningún registro.");
+		});
 	}
 
 	@Transactional(readOnly = true)
