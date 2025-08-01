@@ -71,6 +71,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				case 10:
 					personalizedQueriesBetweenAndOrderBy();
 					break;
+				case 11:
+					personalizedQueriesCountMaxMinLengthSumAvg();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -104,8 +107,55 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("8. Consultas Personalizadas Distinct");
 		System.out.println("9. Consultas Personalizadas Concat Upper and LowerCase");
 		System.out.println("10. Consultas Personalizadas Between And Order By");
+		System.out.println("11. Consultas Personalizadas Count - Max - Min - Length -  Sum - Avg");
 		System.out.println("0. Salir");
 		System.out.println("");
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesCountMaxMinLengthSumAvg() {
+		System.out.println("===================== Consulta Count =====================");
+		Long count = personRepository.countPersons();
+		System.out.println("Cantidad de personas: " + count);
+	
+		System.out.println("");
+		System.out.println("===================== Consulta Max ID =====================");
+		Long maxId = personRepository.getMaxPersonId();
+		System.out.println("ID máximo de persona: " + maxId);
+
+		System.out.println("");
+		System.out.println("===================== Consulta Min ID =====================");
+		Long minIdPerson = personRepository.getMinPersonId();
+		System.out.println("ID mínimo de persona: " + minIdPerson);
+
+		System.out.println("");
+		System.out.println("===================== Consulta Length Nombre Persona =====================");
+		List<Object[]> regs = personRepository.getPersonNameLength();
+		regs.stream().forEach(person -> {
+			System.out.println("Nombre: " + person[0] + ", Longitud: " + person[1]);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta Length Nombre Persona Más Corto =====================");
+		int minName = personRepository.getMinLengthName();
+		System.out.println("Longitud mínima del nombre de persona: " + minName);
+
+		System.out.println("");
+		System.out.println("===================== Consulta Length Nombre Persona Más Largo =====================");
+		int maxName = personRepository.getMaxLengthName();
+		System.out.println("Longitud máxima del nombre de persona: " + maxName);
+
+		System.out.println("");
+		System.out.println("===================== Consulta Agregación Resumen (Min - Max - Sum - Avg - Length - Count) =====================");
+		Object regsResume = personRepository.getResumenAggregationFunction();
+		Object[] resume = (Object[]) regsResume;
+		System.out.println("Resumen de Agregación:");
+		System.out.println("ID Mínimo: " + resume[0]);
+		System.out.println("ID Máximo: " + resume[1]);
+		System.out.println("Suma de IDs: " + resume[2]);
+		System.out.println("Promedio de Longitud de Nombres: " + resume[3]);
+		System.out.println("Cantidad de Personas: " + resume[4]);
+
 	}
 
 	@Transactional(readOnly = true)
