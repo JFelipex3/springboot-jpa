@@ -11,6 +11,12 @@ import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
+    @Query("SELECT p FROM Person p WHERE p.name BETWEEN 'J' AND 'P'")
+    List<Person> findAllBetweenName();
+
+    @Query("SELECT p FROM Person p WHERE p.id BETWEEN 2 AND 5")
+    List<Person> findAllBetweenId();
+
     @Query("SELECT UPPER(CONCAT(p.name, ' ', p.lastname)) as fullName FROM Person p")
     List<String> getFullNameConcatUpper();
 

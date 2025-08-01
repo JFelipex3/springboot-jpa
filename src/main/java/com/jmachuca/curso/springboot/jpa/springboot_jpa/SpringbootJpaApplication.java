@@ -68,6 +68,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				case 9:
 					personalizedQueriesConcatUpperAndLowerCase();
 					break;
+				case 10:
+					personalizedQueriesBetween();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -100,8 +103,25 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("7. Consultas Personalizadas");
 		System.out.println("8. Consultas Personalizadas Distinct");
 		System.out.println("9. Consultas Personalizadas Concat Upper and LowerCase");
+		System.out.println("10. Consultas Personalizadas Between");
 		System.out.println("0. Salir");
 		System.out.println("");
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesBetween() {
+		System.out.println("===================== Consulta personas between ID 2 y 5 =====================");
+		List<Person> persons = personRepository.findAllBetweenId();
+		persons.stream().forEach(person -> {
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname() + ", ID: " + person.getId());
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta personas between name J y P =====================");
+		List<Person> personsName = personRepository.findAllBetweenName();
+		personsName.stream().forEach(person -> {
+			System.out.println("Persona: " + person.getName() + " " + person.getLastname());
+		});
 	}
 
 	@Transactional(readOnly = true)
