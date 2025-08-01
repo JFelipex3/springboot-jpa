@@ -11,6 +11,18 @@ import com.jmachuca.curso.springboot.jpa.springboot_jpa.entities.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
+    @Query("SELECT UPPER(CONCAT(p.name, ' ', p.lastname)) as fullName FROM Person p")
+    List<String> getFullNameConcatUpper();
+
+    @Query("SELECT LOWER(CONCAT(p.name, ' ', p.lastname)) as fullName FROM Person p")
+    List<String> getFullNameConcatLower();
+
+    @Query("SELECT p.name || ' ' || p.lastname as fullName FROM Person p")
+    List<String> getFullNameConcatenadoPipe();
+
+    @Query("SELECT CONCAT(p.name, ' ', p.lastname) as fullName FROM Person p")
+    List<String> getFullNameConcat();
+
     @Query("SELECT p.name FROM Person p")
     List<String> findAllNames();
 

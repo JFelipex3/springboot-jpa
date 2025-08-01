@@ -65,6 +65,9 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 				case 8:
 					personalizedQueriesDistinct();
 					break;
+				case 9:
+					personalizedQueriesConcatUpperAndLowerCase();
+					break;
 				case 0:
 					System.out.println("Saliendo de la aplicación. ¡Hasta luego!");
 					break;
@@ -95,9 +98,40 @@ public class SpringbootJpaApplication implements CommandLineRunner{
 		System.out.println("5. Buscar Persona por ID");
 		System.out.println("6. Buscar Persona por Coincidencia");
 		System.out.println("7. Consultas Personalizadas");
-		System.out.println("8. Consultas Personalizadas JPQL - HQL Funciones");
+		System.out.println("8. Consultas Personalizadas Distinct");
+		System.out.println("9. Consultas Personalizadas Concat Upper and LowerCase");
 		System.out.println("0. Salir");
 		System.out.println("");
+	}
+
+	@Transactional(readOnly = true)
+	public void personalizedQueriesConcatUpperAndLowerCase() {
+		System.out.println("===================== Consulta nombres y apellidos de personas (Concat) =====================");
+		List<String> names = personRepository.getFullNameConcat();
+		names.stream().forEach(name -> {
+			System.out.println("Nombre completo: " + name);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta nombres y apellidos de personas (Pipe) =====================");
+		List<String> namesPipe = personRepository.getFullNameConcatenadoPipe();
+		namesPipe.stream().forEach(name -> {
+			System.out.println("Nombre completo: " + name);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta nombres y apellidos de personas (Upper) =====================");
+		List<String> namesUpper = personRepository.getFullNameConcatUpper();
+		namesUpper.stream().forEach(name -> {
+			System.out.println("Nombre completo: " + name);
+		});
+
+		System.out.println("");
+		System.out.println("===================== Consulta nombres y apellidos de personas (Lower) =====================");
+		List<String> namesLower = personRepository.getFullNameConcatLower();
+		namesLower.stream().forEach(name -> {
+			System.out.println("Nombre completo: " + name);
+		});
 	}
 
 	@Transactional(readOnly = true)
